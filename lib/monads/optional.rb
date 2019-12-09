@@ -13,15 +13,15 @@ module Monads
     def and_then(&block)
       block = ensure_monadic_result(&block)
 
-      if value.nil?
-        self
-      else
+      if value
         block.call(value)
+      else
+        self
       end
     end
 
     def respond_to_missing?(method_name, include_private = false)
-      super || value.nil? || value.respond_to?(method_name, include_private)
+      super || !value || value.respond_to?(method_name, include_private)
     end
 
     def self.from_value(value)
